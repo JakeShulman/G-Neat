@@ -16,7 +16,6 @@ class Neuron(object):
 	def __init__(self,ID):
 		self.neuronID = ID
 
-
 	# Recurse through the network in reverse and calculate the final output value
 	# If an input node is reached return sigmoid of value (base-case)
 	# Otherwise sum the weight of connections * their input values for the whole network
@@ -37,9 +36,9 @@ class Neuron(object):
 		new.outCons 	= self.outCons
 		new.neuronType	= self.neuronType
 		new.value		= self.value
-
 		return new 
 
+	#Print the properities of the neuron
 	def printNeuron(self):
 		print ("Neuron ID: %d \nNeuron Type: %s \n"% (self.neuronID, self.neuronType)
 		+ "Neuron Value: %d \nNeuron Inputs: %s \n"% (self.value, str(self.inCons))
