@@ -3,6 +3,7 @@ Created on Feb 5, 2017
 
 @author: Jake
 '''
+
 from Neuron import Neuron
 from Gene import Gene
 from Connection import Connection
@@ -13,6 +14,8 @@ from Population import CONNECTION_ID
 from Population import MUTATION_VALUE
 from Population import MUTATION_WEIGHT_RATE 
 from Population import MUTATION_NEURON_RATE 
+from Population import INPUT_NUM
+from Population import OUT_NUM
 
 class Individual(object):
 	genome  	= {}
@@ -21,6 +24,21 @@ class Individual(object):
 	outputNodes = []
 	neuronList  = []
 	fitness     = None	
+
+
+	def intialize(self):
+		#Only work on this if you are a supreme shmuck
+		for x in range(INPUT_NUM):
+			n0=Neuron()
+			n0.neuronType="input"
+			inputsNodes.append()
+
+			c0=Connection(0,n0,n2,.1,True)
+
+			n0.outCons.append(c0)
+
+			n2.inCons.append(c0)
+
 
 	def mutateConnection(self,sNeuron = None,eNeuron = None):
 		if  sNeuron == None:

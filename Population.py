@@ -3,6 +3,10 @@ Created on Feb 5, 2017
 
 @author: Jake
 '''
+from Species import Species
+from Individual import Individual
+from Neuron import Neuron
+from Connection import Connection
 
 POPULATION_SIZE				= 0
 MUTATION_VALUE 				= 0
@@ -14,12 +18,20 @@ CONNECTION_ID				= 0
 CULL_PERCENT 				= .50
 MAX_LOSE_STREAK 			= 10
 NUM_GENERATIONS				= 10
+INPUT_NUM					= 3
+OUTPUT_NUM					= 1
 
 speciesList 	= []
 individualList 	= []
 
 def instantiate():
+	for x in range(POPULATION_SIZE):
+		i = Individual()
+
 	pass
+
+################## Do Not Cross this line if you are a shmuck-a-roo ########################################
+
 
 def dataExtract():
 	pass

@@ -36,7 +36,7 @@ class Species(object):
 		fitness = calcFitness(i,output,targetData)
 		i.fitness = fitness
 		self.totalFit+=fitness
-		self.fitnessList.append(fitness)
+		self.fitnessList.append((i,fitness))
 
 	def calcFitness(self, i, output, targetData):
 		if targetData ==  None:
@@ -52,20 +52,22 @@ class Species(object):
 				total+= ((targetData[o]-output[o])**2)/targetData[o]
 		return total
 
-	def getNextGen(self, minimize= True):
+	def getNextGen(self, maximize= True):
 		nextGen =  []
 		#Reversed order for MSE --> first value is largest
 		self.fitnessList = sorted(self.fitnessList, key=lambda x:x[1])
-		if  minimize: 
+		if  maximize: 
 			self.fitnessList = self.fitnessList[::-1]
 		self.representative = self.fitnessList[0][0]
 		survivors = self.fitnessList[:len(self.fitnessList)*(1-CULL_PERCENT)]
 		casualties = self.fitnessList[len(self.fitnessList)*(1-CULL_PERCENT):]
 		survivorTotal = sum([fit[1] for fit in survivors])
+		#Used to divide fitness among the surviving individuals for probabilistic breeding
 		probabilities = [x[1]/survivorTotal for x in survivors]
 
+		#Range value computes what number of indivisuals to breed, using a variable Culling Percent
 		for x in range((2/(1-CULL_PERCENT))-2):
-			#SHITTY BREEDING PROTOCOL TEMPORARY
+			#SHITTY BREEDING PROTOCOL TEMPORARY -- MAYBE
 			for parent in survivors:
 				pair = np.random.choice(len(survivors),2,p=probabilities, replace = False)
 				nextGen.append(breed(pair[0], pair[1]))
@@ -73,13 +75,13 @@ class Species(object):
 		for survivor in survivors:
 			nextGen.append(survivor[0])
 
-		self.averageFitness =  calcAvgFitness()
+		self.averageFitness = calcAvgFitness()
 		resetSpecies()
 		return nextGen
 
 
 	def breed(i1,i2):
-		#i1 has the higer fitness
+		#i1 has the higer fitness, justc double checking
 		if i1.fitness > i2.fitness: stronger = i1; weaker = i2
 		else: stronger = i2; weaker = i1
 		a = set(stronger.genome.keys())
@@ -87,12 +89,16 @@ class Species(object):
 		union = a&b
 		total = a|b
 		child = Individual()
+		"""Diff is a scaled value quantifying how much stronger the stronger species is (0-.5). 
+		Value added to .5 to get probability of corssing over disjoint genes"""
 		diff=1/((float(stronger.fitness-weaker.fitness)/stronger.fitness)+1)
-		#CROSSING OVER
+		#Crossing over protocol
 		for gene in total:
+			#if gene present in both 50% crossing over
 			if gene in union:
 				if random.randbits(1): child.addStruct(stronger[gene])
 				else: child.addStruct(weaker[gene])
+			#If gene only in one parent cross over with the fitness scaled probability
 			else:
 				if gene in b:
 					if np.random.choice(1, 1, p=[.5+diff,.5-diff]):
@@ -101,6 +107,7 @@ class Species(object):
 					if not np.random.choice(1, 1, p=[.5+diff,.5-diff]):
 						child.addStruct(stronger[gene])
 
+		#Randomly add mutations to neurons and connections
 		if random.randint(0,99)<=MUTATION_NEURON_RATE:
 			child.mutateAddNeuron()
 		if random.randint(0,99)<=MUTATION_CONNECTION_RATE:
