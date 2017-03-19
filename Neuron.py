@@ -4,7 +4,7 @@ Created on Feb 4, 2017
 @author: Jake
 '''
 import math
-from Connection import Connection
+from Connection import *
 
 class Neuron(object):
 	inCons     	= []
@@ -14,7 +14,11 @@ class Neuron(object):
 	value      	= None
 
 	def __init__(self):
-		pass
+		self.inCons     	= []
+		self.outCons    	= []
+		self.neuronID   	= 0
+		self.neuronType 	= ""
+		self.value      	= 0.0
 	# Recurse through the network in reverse and calculate the final output value
 	# If an input node is reached return sigmoid of value (base-case)
 	# Otherwise sum the weight of connections * their input values for the whole network
@@ -40,12 +44,24 @@ class Neuron(object):
 		new.value		= self.value
 		return new 
 
-	#Print the properities of the neuron
-	def printNeuron(self):
-		print ("Neuron ID: %d \nNeuron Type: %s \n"% (self.neuronID, self.neuronType)
-		+ "Neuron Value: %d \nNeuron Inputs: %s \n"% (self.value, str(self.inCons))
-		+ "Neuron Outputs: %s" %(str(self.outCons)))
 
+	def __eq__(self, other):
+			if other==None:
+				return False
+			if self.neuronType    	!= other.neuronType: return False
+			if self.value   		!= other.value: return False
+			return True
+
+
+	#Print the properities of the neuron
+	def __str__(self):
+		return """
+		Neuron ID: %d 
+		Neuron Type: %s 
+		Neuron Value: %d 
+		Neuron Inputs: %s 
+		Neuron Outputs: %s
+		"""%(self.neuronID, self.neuronType, self.value, self.inCons, self.outCons)
 
 
 

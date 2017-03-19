@@ -5,7 +5,7 @@ Created on Feb 4, 2017
 '''
 import numpy as np
 import random
-from Population import MUTATION_VALUE
+import Population
 
 class Connection(object):
 	inNeuron  	= None
@@ -20,11 +20,17 @@ class Connection(object):
 		self.weight    	= weight
 		self.enabled   	= enabled
 		self.ID			= ID
+		if(self.inNeuron.neuronType=='hidden'):
+			self.inNeuron.neuronID=self.ID
+		if(self.outNeuron.neuronType=='hidden'):
+			self.outNeuron.neuronID=self.ID
+
+		#Hi future luke and Jake Think about  making connection .equals function for convergent evolution
 
 	def mutateWeight(self):
 		#generates a random bool efficiently bitwise
-		if random.randbits(1): self.weight = self.weight + MUTATION_VALUE
-		else: self.weight = self.weight - MUTATION_VALUE
+		if random.getrandbits(1): self.weight = self.weight + Population.MUTATION_VALUE
+		else: self.weight = self.weight - Population.MUTATION_VALUE
 
 	def mutateEnable(self):
 		#switch the enabled status of the connection
@@ -33,3 +39,10 @@ class Connection(object):
 
 	def copy(self):
 		return Connection(self.ID, self.inNeuron, self.outNeuron, self.weight)
+
+	def __eq__(self, other):
+		# if self.inNeuron  	!= other.inNeuron: return False
+		# if self.outNeuron 	!= other.outNeuron: return False
+		# if self.enabled   	!= other.enabled: return False
+		print "SAME"
+		return True
